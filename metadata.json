@@ -1,0 +1,7 @@
+{
+  "name": "Lumina OCR Pro",
+  "description": "Enterprise-grade OCR application powered by Gemini 2.5 Flash. Features multi-language support (Arabic/English), PDF processing, table extraction, and developer API documentation.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
