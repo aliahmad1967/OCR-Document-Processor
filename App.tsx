@@ -8,6 +8,7 @@ import {
 import FileUpload from './components/FileUpload';
 import Editor from './components/Editor';
 import ApiDocs from './components/ApiDocs';
+import SettingsView from './components/SettingsView';
 import { DocumentFile, OcrMode, OcrResult, ProcessingStatus, SupportedLanguage } from './types';
 import { performOcr } from './services/geminiService';
 import { getPdfPageAsImage } from './services/pdfService';
@@ -153,6 +154,11 @@ const App = () => {
     processDocument(doc);
   };
 
+  const handleClearHistory = () => {
+    setDocuments([]);
+    setSelectedDocId(null);
+  };
+
   const handleDownload = (format: 'txt' | 'csv' | 'doc') => {
     if (!selectedDoc || !selectedDoc.results) return;
     
@@ -277,7 +283,8 @@ const App = () => {
             {isSidebarOpen && <span className="ml-3 font-medium">API & Developers</span>}
           </button>
            <button 
-            className={`w-full flex items-center p-3 rounded-lg transition-colors text-slate-400 cursor-not-allowed`}
+            onClick={() => setCurrentView(View.SETTINGS)}
+            className={`w-full flex items-center p-3 rounded-lg transition-colors ${currentView === View.SETTINGS ? 'bg-blue-50 text-primary' : 'text-slate-600 hover:bg-slate-50'}`}
           >
             <Settings className="w-5 h-5" />
             {isSidebarOpen && <span className="ml-3 font-medium">Settings</span>}
@@ -334,7 +341,8 @@ const App = () => {
         {/* Header */}
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10">
           <h2 className="text-lg font-semibold text-slate-800">
-            {currentView === View.DASHBOARD ? 'Document Processor' : 'Developer Resources'}
+            {currentView === View.DASHBOARD ? 'Document Processor' : 
+             currentView === View.API_DOCS ? 'Developer Resources' : 'Settings'}
           </h2>
           
           {currentView === View.DASHBOARD && (
@@ -376,6 +384,16 @@ const App = () => {
             <div className="h-full overflow-y-auto custom-scrollbar">
                <ApiDocs />
             </div>
+          ) : currentView === View.SETTINGS ? (
+             <div className="h-full overflow-y-auto custom-scrollbar">
+               <SettingsView 
+                 activeLang={activeLang}
+                 setActiveLang={setActiveLang}
+                 activeMode={activeMode}
+                 setActiveMode={setActiveMode}
+                 onClearHistory={handleClearHistory}
+               />
+             </div>
           ) : (
             <div className="h-full flex flex-col lg:flex-row gap-6">
               
